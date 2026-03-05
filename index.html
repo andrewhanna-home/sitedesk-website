@@ -4,590 +4,846 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SiteDesk | Subscription Contract Administration for Builders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#f3f7fd; /* very light blue background */
-      --text:#0f172a; /* slate-900 */
-      --muted:#475569; /* slate-600 */
-      --card:#ffffff;
-      --border:rgba(15,23,42,.12);
-      --brand:#2563eb; /* blue */
-      --brand2:#60a5fa; /* light blue */
-      --max:1100px;
-      --r:18px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth; scrollbar-gutter: stable}
-    body{
-      margin:0;
-      overflow-x:hidden;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(96,165,250,.25), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(147,197,253,.22), transparent 55%),
-        var(--bg);
-    }
-    a{color:inherit; text-decoration:none}
-    .container{max-width:var(--max); margin:0 auto; padding:0 20px}
-
-    /* Sticky nav */
-    header{
-      position:sticky; top:0; z-index:50;
-      background:rgba(243,247,253,.85);
-      border-bottom:1px solid var(--border);
-      backdrop-filter: blur(10px);
-    }
-    .nav{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:12px; padding:14px 0; flex-wrap:wrap;
-    }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:900}
-    .logo{width:34px; height:34px; display:grid; place-items:center}
-    .mark{width:34px; height:34px; filter: drop-shadow(0 12px 30px rgba(37,99,235,.25));}
-    .wordmark{letter-spacing:-0.02em}
-    .wordmark em{font-style:normal; opacity:.8; font-weight:800}
-    .links{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-
-    /* Mobile nav */
-    .menuBtn{
-      display:none;
-      align-items:center;
-      justify-content:center;
-      width:40px;
-      height:40px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.60);
-      cursor:pointer;
-      font-weight:900;
-    }
-    .menuBtn svg{width:18px; height:18px}
-
-    @media (max-width: 640px){
-      .nav{padding:10px 0}
-      .pill{font-size:12px; padding:8px 10px}
-      .menuBtn{display:inline-flex}
-      .links{display:none; width:100%}
-      .links.open{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-        padding:10px 0 6px;
-      }
-      .links .pill{width:100%; text-align:center}
-      .links .pill.cta{grid-column:1 / -1}
-    }
-    .pill{
-      padding:9px 12px; border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      font-size:13px; font-weight:800;
-    }
-    .pill.cta{background:linear-gradient(135deg,var(--brand), rgba(37,99,235,.65)); border-color:transparent}
-
-    /* Sections */
-    section{padding:38px 0}
-    .anchor{scroll-margin-top:90px}
-    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--r); padding:22px}
-
-    /* Hero should not look like a small boxed card */
-    .heroPanel{
-      width:100%;
-      padding:0;
-      background:transparent;
-      border:none;
-      border-radius:0;
-      box-shadow:none;
-    }
-    .heroPanel .badge{background:rgba(255,255,255,.05)}
-    .heroPanel h1{max-width:22ch}
-    .heroPanel p{max-width:80ch}
-
-    h1{margin:0 0 12px; font-size:44px; line-height:1.06}
-    h2{margin:0 0 10px; font-size:26px}
-    h3{margin:0 0 8px; font-size:16px}
-    p{margin:0; color:var(--muted); line-height:1.6}
-
-    .grid{display:grid; gap:14px}
-    .hero{
-      padding:72px 0 56px;
-      position:relative;
-      overflow:hidden;
-    }
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(1200px 600px at 20% -10%, rgba(96,165,250,.25), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(147,197,253,.22), transparent 55%),
-        linear-gradient(180deg, rgba(243,247,253,.96), rgba(243,247,253,.90));
-      z-index:0;
-    }
-    .hero > *{position:relative; z-index:1;}
-    .heroGrid{grid-template-columns:1.15fr .85fr; align-items:center}
-    @media (max-width: 920px){ .heroGrid{grid-template-columns:1fr} h1{font-size:34px} }
-
-    /* Images */
-    .heroArt{
-      border:1px solid var(--border);
-      border-radius:var(--r);
-      background:rgba(255,255,255,.03);
-      overflow:hidden;
-      padding:16px;
-    }
-    .heroArt svg{width:100%; height:auto; display:block}
-    .imgRow{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px}
-    @media (max-width: 920px){ .imgRow{grid-template-columns:1fr} }
-    .imgTile{border:1px solid var(--border); border-radius:16px; background:rgba(255,255,255,.03); overflow:hidden}
-    .imgTile .cap{padding:12px 14px}
-    .imgTile .cap b{display:block; color:var(--text); margin-bottom:4px}
-    .imgTile svg{width:100%; height:auto; display:block}
-    .iconRow{display:flex; align-items:center; gap:10px}
-    .icon{width:34px; height:34px; border-radius:12px; border:1px solid var(--border); background:rgba(255,255,255,.04); display:grid; place-items:center}
-    .icon svg{width:18px; height:18px; display:block}
-
-    .badge{display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:900; padding:7px 10px; border-radius:999px; background:rgba(255,255,255,.04); border:1px solid var(--border); margin-bottom:12px}
-    .dot{width:8px; height:8px; border-radius:999px; background:var(--brand2)}
-
-    .btnRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
-    .btn{display:inline-flex; align-items:center; justify-content:center; padding:12px 14px; border-radius:14px; font-weight:900; border:1px solid var(--border); background:rgba(255,255,255,.04)}
-    .btn.primary{background:linear-gradient(135deg,var(--brand), rgba(37,99,235,.65)); border-color:transparent}
-    .btn.secondary{border-color:rgba(96,165,250,.45); background:rgba(96,165,250,.12)}
-
-    .cols2{grid-template-columns:repeat(2,1fr)}
-    .cols3{grid-template-columns:repeat(3,1fr)}
-    @media (max-width: 920px){ .cols2,.cols3{grid-template-columns:1fr} }
-
-    .item{padding:14px; border-radius:16px; border:1px solid var(--border); background:rgba(255,255,255,.03)}
-    ul{margin:10px 0 0; padding-left:18px; color:var(--muted); line-height:1.6}
-
-    details{border:1px solid var(--border); border-radius:16px; padding:14px; background:rgba(255,255,255,.03)}
-    summary{cursor:pointer; font-weight:900}
-
-    input, textarea{width:100%; padding:12px; border-radius:14px; border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--text); font-size:14px}
-    textarea{min-height:110px; resize:vertical}
-
-    footer{border-top:1px solid var(--border); padding:22px 0 34px; color:var(--muted); font-size:12px; background:#f8fbff}
-
-    /* Motion + hover polish */
-    .pill, .btn, .card, .item, details, input, textarea{
-      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease, opacity .22s ease;
-      will-change: transform;
+    :root {
+      --bg:        #f0f6ff;
+      --surface:   #ffffff;
+      --ink:       #0d1b2e;
+      --ink2:      #152340;
+      --muted:     #4a6080;
+      --rule:      rgba(13,27,46,.1);
+      --rule-lg:   rgba(13,27,46,.16);
+      --blue:      #2563eb;
+      --blue-mid:  #3b82f6;
+      --blue-pale: #93c5fd;
+      --blue-dim:  rgba(37,99,235,.1);
+      --blue-glow: rgba(37,99,235,.22);
+      --max:       1160px;
     }
 
-    .pill:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06)}
-    .pill.cta:hover{transform: translateY(-1px) scale(1.01)}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scrollbar-gutter: stable; }
 
-    .btn:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.18)}
-    .btn.primary:hover{box-shadow: 0 18px 45px rgba(124,58,237,.25)}
-    .btn.secondary:hover{box-shadow: 0 18px 45px rgba(34,197,94,.14)}
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
 
-    .card:hover{border-color: rgba(255,255,255,.18); box-shadow: 0 22px 70px rgba(0,0,0,.30)}
-    .item:hover{transform: translateY(-4px); border-color: rgba(255,255,255,.18); box-shadow: 0 18px 50px rgba(0,0,0,.28)}
+    a { color: inherit; text-decoration: none; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 28px; }
 
-    details[open]{border-color: rgba(255,255,255,.16)}
-    details:hover{border-color: rgba(255,255,255,.18)}
+    /* ── Animations ── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
+    @keyframes fadeIn   { from { opacity:0 } to { opacity:1 } }
+    @keyframes growX    { from { transform:scaleX(0) } to { transform:scaleX(1) } }
 
-    input:focus, textarea:focus{border-color: rgba(37,99,235,.55); box-shadow: 0 0 0 4px rgba(37,99,235,.18)}
+    .a1 { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) both .04s }
+    .a2 { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) both .16s }
+    .a3 { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) both .28s }
+    .a4 { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) both .40s }
+    .a5 { animation: fadeUp .65s cubic-bezier(.16,1,.3,1) both .52s }
+    .a-img { animation: fadeIn 1s ease both .1s }
 
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      html{scroll-behavior:auto}
-      .pill, .btn, .card, .item, details, input, textarea{transition:none}
+    /* ── NAV ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(240,246,255,.9);
+      border-bottom: 1px solid var(--rule-lg);
+      backdrop-filter: blur(14px);
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; gap: 14px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 20px; letter-spacing: .05em; text-transform: uppercase;
+      color: var(--ink);
+    }
+    .brand em { font-style: normal; color: var(--blue); }
+    .brand-icon {
+      width: 34px; height: 34px; background: var(--blue); border-radius: 8px;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .brand-icon svg { width: 20px; height: 20px; }
+
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .npill {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: 8px; color: var(--muted);
+      border: 1px solid transparent;
+      transition: color .18s, background .18s, border-color .18s;
+    }
+    .npill:hover { color: var(--ink); background: rgba(37,99,235,.07); }
+    .npill.cta { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .npill.cta:hover { background: #1d4ed8; border-color: #1d4ed8; }
+
+    .menu-btn {
+      display: none; width: 38px; height: 38px; border-radius: 8px;
+      border: 1px solid var(--rule-lg); background: transparent; cursor: pointer; color: var(--ink);
+      align-items: center; justify-content: center;
+    }
+    .menu-btn svg { width: 18px; height: 18px; }
+
+    @media (max-width: 720px) {
+      .menu-btn { display: flex; }
+      .nav-links { display: none; width: 100%; padding: 8px 0 12px; gap: 6px; }
+      .nav-links.open { display: grid; grid-template-columns: 1fr 1fr; }
+      .nav-links .npill { text-align: center; }
+      .nav-links .npill.cta { grid-column: 1/-1; }
+      .nav { flex-wrap: wrap; }
+    }
+
+    /* ── HERO — full bleed image background ── */
+    .hero {
+      position: relative; overflow: hidden;
+      min-height: 560px; display: flex; align-items: center;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('danist-soh-8Gg2Ne_uTcM-unsplash.jpg') center/cover no-repeat;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(100deg, rgba(13,27,46,.88) 45%, rgba(13,27,46,.55) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2; padding: 90px 0 80px;
+      max-width: 620px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--blue-pale); margin-bottom: 18px;
+    }
+    .eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-pale); }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900; font-size: clamp(36px, 5vw, 60px); line-height: 1.05;
+      color: #fff; margin-bottom: 20px;
+    }
+    h1 em { font-style: italic; color: var(--blue-pale); }
+
+    .hero-lead {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 16px; color: rgba(255,255,255,.9);
+      margin-bottom: 10px; letter-spacing: .01em;
+    }
+    .hero-body { font-size: 15px; color: rgba(255,255,255,.65); line-height: 1.7; margin-bottom: 14px; }
+
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+    .btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 14px; letter-spacing: .07em; text-transform: uppercase;
+      padding: 13px 22px; border-radius: 10px; border: 1.5px solid transparent;
+      display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      transition: transform .2s, box-shadow .2s, background .2s, border-color .2s;
+    }
+    .btn.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .btn.primary:hover { background: #1d4ed8; transform: translateY(-2px); box-shadow: 0 14px 36px rgba(37,99,235,.4); }
+    .btn.ghost { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.25); backdrop-filter: blur(6px); }
+    .btn.ghost:hover { background: rgba(255,255,255,.18); transform: translateY(-2px); }
+    .btn.blue-outline { background: transparent; color: var(--blue); border-color: var(--blue); }
+    .btn.blue-outline:hover { background: var(--blue-dim); transform: translateY(-2px); }
+
+    .hero-note { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 14px; }
+
+    /* Stats strip */
+    .hero-stats {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      background: rgba(13,27,46,.75); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,.1);
+      display: flex;
+    }
+    .hstat {
+      flex: 1; padding: 16px 20px; border-right: 1px solid rgba(255,255,255,.08);
+      text-align: center;
+    }
+    .hstat:last-child { border-right: none; }
+    .hstat-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px; font-weight: 900; color: var(--blue-pale); line-height: 1;
+    }
+    .hstat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: rgba(255,255,255,.45); margin-top: 4px;
+    }
+    @media (max-width: 560px) {
+      .hero-stats { display: none; }
+      .hero-content { padding: 64px 0 56px; }
+    }
+
+    /* ── HOW IT WORKS — horizontal timeline ── */
+    .how { background: var(--surface); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .how-inner { padding: 64px 0; }
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 11px; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 8px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900; font-size: clamp(26px, 3.5vw, 38px); line-height: 1.1;
+      color: var(--ink); margin-bottom: 12px;
+    }
+    .how-intro { max-width: 520px; margin-bottom: 48px; }
+    .how-intro p { font-size: 15px; color: var(--muted); line-height: 1.7; }
+
+    .timeline {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      position: relative; gap: 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute; top: 24px; left: calc(16.67% + 12px); right: calc(16.67% + 12px);
+      height: 2px; background: linear-gradient(90deg, var(--blue), var(--blue-pale));
+      z-index: 0;
+    }
+    @media (max-width: 720px) {
+      .timeline { grid-template-columns: 1fr; gap: 24px; }
+      .timeline::before { display: none; }
+    }
+    .tStep { padding: 0 20px 0 0; position: relative; z-index: 1; }
+    .tStep:last-child { padding-right: 0; }
+    .tNum {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--blue); color: #fff;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+      box-shadow: 0 0 0 6px var(--surface), 0 0 0 8px rgba(37,99,235,.2);
+    }
+    h3 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 16px; letter-spacing: .03em; text-transform: uppercase;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .tStep p { font-size: 14px; color: var(--muted); line-height: 1.65; }
+    .how-footnote {
+      margin-top: 36px; padding: 16px 20px;
+      background: var(--blue-dim); border-left: 3px solid var(--blue);
+      border-radius: 0 8px 8px 0;
+    }
+    .how-footnote p { font-size: 14px; color: var(--muted); }
+    .how-footnote strong { color: var(--ink); }
+
+    /* ── SERVICES — sidebar sticky layout ── */
+    .services-section { padding: 72px 0; }
+    .services-wrap {
+      display: grid; grid-template-columns: 260px 1fr; gap: 48px; align-items: start;
+    }
+    @media (max-width: 900px) { .services-wrap { grid-template-columns: 1fr; } }
+
+    .services-sidebar { position: sticky; top: 90px; }
+    .services-sidebar h2 { margin-bottom: 12px; }
+    .services-sidebar p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 24px; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 4px; }
+    .snav-item {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 13px; letter-spacing: .05em; text-transform: uppercase;
+      padding: 9px 14px; border-radius: 8px; color: var(--muted);
+      border: 1px solid transparent; transition: all .18s; cursor: pointer;
+    }
+    .snav-item:hover, .snav-item.active {
+      color: var(--blue); background: var(--blue-dim); border-color: rgba(37,99,235,.2);
+    }
+    @media (max-width: 900px) { .services-sidebar { position: static; } .sidebar-nav { display: none; } }
+
+    .services-main { display: flex; flex-direction: column; gap: 20px; }
+
+    /* Base card */
+    .base-card { background: var(--ink2); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.06); }
+    .base-card-top {
+      padding: 28px 28px 22px;
+      background: linear-gradient(135deg, var(--ink2), #0f1f38);
+      position: relative; overflow: hidden;
+    }
+    .base-card-top::before {
+      content: ''; position: absolute; top: -60px; right: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,99,235,.25), transparent 70%);
+    }
+    .base-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px;
+      letter-spacing: .1em; text-transform: uppercase;
+      background: rgba(37,99,235,.25); color: var(--blue-pale);
+      border: 1px solid rgba(37,99,235,.35); padding: 5px 11px; border-radius: 6px;
+      margin-bottom: 14px;
+    }
+    .base-card-top h2 { color: #fff; font-size: clamp(22px, 2.8vw, 30px); margin-bottom: 8px; }
+    .base-card-top p { color: rgba(255,255,255,.6); font-size: 14px; margin-bottom: 18px; }
+    .price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .price-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900; font-size: 42px; color: #fff; line-height: 1;
+    }
+    .price-suffix {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 14px; color: rgba(255,255,255,.5); letter-spacing: .03em;
+    }
+    .base-card-body {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1px; background: rgba(255,255,255,.06);
+    }
+    @media (max-width: 600px) { .base-card-body { grid-template-columns: 1fr; } }
+    .base-card-col { background: var(--ink2); padding: 22px 24px; }
+    .base-card-col p { font-size: 13px; color: rgba(255,255,255,.5); margin-bottom: 12px; }
+    .base-card-col ul { color: rgba(255,255,255,.65); font-size: 13px; line-height: 1.8; padding-left: 16px; }
+    .base-card-col ul li strong { color: rgba(255,255,255,.9); }
+    .base-card-footer { padding: 14px 24px; background: rgba(0,0,0,.2); }
+    .base-card-footer p { font-size: 12px; color: rgba(255,255,255,.3); }
+
+    /* Add-on cards */
+    .addons-header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+
+    .addon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 700px) { .addon-grid { grid-template-columns: 1fr; } }
+
+    .addon-card {
+      background: var(--surface); border: 1px solid var(--rule-lg);
+      border-radius: 14px; padding: 22px;
+      transition: transform .22s, box-shadow .22s, border-color .22s;
+    }
+    .addon-card:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+    .addon-card h3 { font-size: 14px; color: var(--ink); margin-bottom: 2px; }
+    .addon-price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800; font-size: 20px; color: var(--blue); margin: 8px 0 12px;
+    }
+    .addon-price span { font-size: 13px; color: var(--muted); font-weight: 600; }
+    .addon-card ul { color: var(--muted); font-size: 13px; line-height: 1.8; padding-left: 16px; }
+    .addon-card ul li strong { color: var(--ink); }
+    .best-for { margin-top: 12px; font-size: 13px; color: var(--muted); }
+    .best-for strong { color: var(--ink); }
+
+    .pop-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(37,99,235,.1); color: var(--blue);
+      border: 1px solid rgba(37,99,235,.25); padding: 3px 8px; border-radius: 4px;
+      margin-left: 8px; vertical-align: middle;
+    }
+
+    /* Discounts */
+    .discount-wrap {
+      background: var(--surface); border: 1px solid var(--rule-lg);
+      border-radius: 14px; padding: 24px;
+    }
+    .discount-wrap h3 { font-size: 15px; color: var(--ink); margin-bottom: 6px; }
+    .discount-wrap > p { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+    .discount-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .discount-cols { grid-template-columns: 1fr; } }
+    .d-box { background: var(--bg); border: 1px solid var(--rule); border-radius: 10px; padding: 16px 18px; }
+    .d-box h3 { font-size: 13px; margin-bottom: 10px; }
+    .d-box ul { font-size: 13px; color: var(--muted); line-height: 1.8; padding-left: 16px; }
+    .d-box ul li strong { color: var(--ink); }
+    .d-box p { font-size: 12px; margin-top: 10px; }
+
+    /* ── FAQs — two columns ── */
+    .faqs-section { padding: 72px 0; background: var(--surface); border-top: 1px solid var(--rule); }
+    .faqs-head { max-width: 500px; margin-bottom: 42px; }
+    .faqs-head p { font-size: 15px; color: var(--muted); margin-top: 10px; }
+
+    .faqs-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start; }
+    @media (max-width: 720px) { .faqs-cols { grid-template-columns: 1fr; } }
+
+    details {
+      background: var(--bg); border: 1px solid var(--rule-lg);
+      border-radius: 12px; overflow: hidden; transition: border-color .2s, box-shadow .2s;
+    }
+    details:hover, details[open] { border-color: rgba(37,99,235,.3); }
+    details[open] { box-shadow: 0 8px 30px rgba(37,99,235,.08); }
+    summary {
+      list-style: none; cursor: pointer;
+      padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px;
+      letter-spacing: .01em; color: var(--ink); gap: 12px;
+    }
+    summary::-webkit-details-marker { display: none; }
+    .sum-icon {
+      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+      background: var(--blue-dim); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 400; line-height: 1;
+      transition: background .2s, transform .25s;
+    }
+    details[open] .sum-icon { background: var(--blue); color: #fff; transform: rotate(45deg); }
+    .details-body { padding: 0 20px 16px; }
+    .details-body p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+    /* ── CONTACT ── */
+    .contact-section { padding: 72px 0 80px; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+    @media (max-width: 820px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .contact-left h2 { margin-bottom: 12px; }
+    .contact-left > p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+
+    .trust-items { display: flex; flex-direction: column; gap: 12px; }
+    .trust-item { display: flex; align-items: flex-start; gap: 12px; }
+    .trust-icon {
+      width: 38px; height: 38px; flex-shrink: 0; border-radius: 10px;
+      background: var(--blue-dim); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .trust-icon svg { width: 18px; height: 18px; }
+    .trust-item h3 { font-size: 14px; margin-bottom: 2px; color: var(--ink); }
+    .trust-item p { font-size: 13px; color: var(--muted); }
+
+    .contact-form {
+      background: var(--surface); border: 1px solid var(--rule-lg);
+      border-radius: 18px; padding: 30px;
+    }
+    .contact-form h3 { font-size: 18px; color: var(--ink); margin-bottom: 20px; }
+    .field { margin-bottom: 14px; }
+    label {
+      display: block; margin-bottom: 5px;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    }
+    input, textarea {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg); border: 1px solid var(--rule-lg);
+      border-radius: 10px; color: var(--ink); font-family: 'Barlow', sans-serif; font-size: 14px;
+      transition: border-color .2s, box-shadow .2s; outline: none;
+    }
+    input::placeholder, textarea::placeholder { color: rgba(74,96,128,.4); }
+    input:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 4px var(--blue-glow); }
+    textarea { min-height: 108px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+    #formSuccess {
+      display: none; padding: 14px 16px; border-radius: 10px;
+      background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.25);
+      margin-bottom: 16px;
+    }
+    #formSuccess strong { color: var(--ink); font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: .03em; }
+    #formSuccess p { font-size: 13px; margin-top: 4px; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink2); border-top: 1px solid rgba(255,255,255,.06);
+      padding: 28px 0 36px;
+    }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .footer-brand {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 17px;
+      letter-spacing: .06em; text-transform: uppercase; color: #fff;
+    }
+    .footer-brand em { font-style: normal; color: var(--blue-pale); }
+    .footer-sub { font-size: 12px; color: rgba(255,255,255,.4); margin-top: 4px; }
+    .footer-right { font-size: 12px; color: rgba(255,255,255,.35); text-align: right; }
+    .footer-right a { color: var(--blue-pale); font-weight: 700; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <div class="container">
-      <div class="nav">
-        <a class="brand" href="#top" aria-label="SiteDesk Home">
-          <span class="logo" aria-hidden="true">
-            <!-- SiteDesk logo (inline SVG) -->
-            <svg class="mark" viewBox="0 0 64 64" role="img" aria-hidden="true">
-              <defs>
-                <linearGradient id="sdGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stop-color="var(--brand)"/>
-                  <stop offset="1" stop-color="var(--brand2)"/>
-                </linearGradient>
-              </defs>
-              <rect x="6" y="6" width="52" height="52" rx="14" fill="url(#sdGrad)"/>
-              <!-- site lines -->
-              <path d="M18 22 H46" stroke="rgba(255,255,255,.85)" stroke-width="3" stroke-linecap="round"/>
-              <path d="M18 28 H46" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round"/>
-              <!-- desk -->
-              <path d="M20 38 H44" stroke="rgba(255,255,255,.95)" stroke-width="4" stroke-linecap="round"/>
-              <path d="M24 38 V44 M40 38 V44" stroke="rgba(255,255,255,.95)" stroke-width="3" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="wordmark">Site<em>Desk</em></span>
-        </a>
 
-        <button class="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M4 7h16M4 12h16M4 17h16" />
-          </svg>
-        </button>
+<!-- NAV -->
+<header>
+  <div class="container">
+    <div class="nav">
+      <a href="#top" aria-label="SiteDesk Home" style="display:inline-flex;align-items:center;">
+        <img src="/mnt/user-data/uploads/SiteDesk-removebg-preview.png" alt="SiteDesk" style="height:32px; width:auto; display:block;" />
+      </a>
 
-        <nav id="navLinks" class="links" aria-label="Section navigation">
-          <a class="pill" href="#how">How it works</a>
-          <a class="pill" href="#services">Packages</a>
-          <a class="pill" href="#faqs">FAQs</a>
-          <a class="pill" href="tel:0451024331">Call us 0451 024 331</a>
-          <a class="pill cta" href="#contact">Request proposal</a>
+      <button class="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+
+      <nav id="navLinks" class="nav-links" aria-label="Section navigation">
+        <a class="npill" href="#how">How it works</a>
+        <a class="npill" href="#services">Packages</a>
+        <a class="npill" href="#faqs">FAQs</a>
+        <a class="npill" href="tel:0451024331">0451 024 331</a>
+        <a class="npill cta" href="#contact">Request proposal</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="top" class="hero" aria-label="Hero">
+  <div class="hero-bg" role="img" aria-label="Construction site with tower cranes"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="eyebrow a1"><span class="eyebrow-dot"></span> Month-to-month subscription CA</div>
+      <h1 class="a2">Subscription <em>Contract Administration</em> for Builders</h1>
+      <p class="hero-lead a3">Protect your margin. Stay compliant. Keep your claims moving.</p>
+      <p class="hero-body a3">Built by construction professionals with over a decade of Australian industry experience. On-demand CA support — variations, claims, procurement, subcontract admin, cost control, and Security of Payment compliance — without hiring full-time.</p>
+      <p class="hero-body a3" style="margin-top:0;">Fast onboarding. We typically integrate and begin adding value within days, not weeks.</p>
+      <div class="btn-row a4">
+        <a class="btn primary" href="#contact">Request a same-day proposal</a>
+        <a class="btn ghost" href="#services">View packages</a>
+      </div>
+      <p class="hero-note a5">Australia-wide &nbsp;·&nbsp; Remote delivery &nbsp;·&nbsp; Scale up/down anytime</p>
+    </div>
+  </div>
+  <div class="hero-stats a-img">
+    <div class="hstat"><div class="hstat-val">10+</div><div class="hstat-label">Years experience</div></div>
+    <div class="hstat"><div class="hstat-val">Days</div><div class="hstat-label">To onboard</div></div>
+    <div class="hstat"><div class="hstat-val">M-M</div><div class="hstat-label">No lock-in</div></div>
+    <div class="hstat"><div class="hstat-val">AU</div><div class="hstat-label">Nationwide</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="how" style="scroll-margin-top:74px;">
+  <div class="container">
+    <div class="how-inner">
+      <div class="how-intro">
+        <p class="section-label">Process</p>
+        <h2>How it works</h2>
+        <p>SiteDesk integrates quickly and runs a consistent commercial rhythm so variations, claims and correspondence keep moving.</p>
+      </div>
+      <div class="timeline">
+        <div class="tStep">
+          <div class="tNum">1</div>
+          <h3>Onboard</h3>
+          <p>We review current project status, contracts, registers and priorities. Then we implement the SiteDesk CA system immediately.</p>
+        </div>
+        <div class="tStep">
+          <div class="tNum">2</div>
+          <h3>Manage the workflow</h3>
+          <p>We manage the weekly workflow: variations, claims, correspondence, action tracking and Security of Payment Act key dates.</p>
+        </div>
+        <div class="tStep">
+          <div class="tNum">3</div>
+          <h3>Keep you informed</h3>
+          <p>You receive clear updates and a short written snapshot of what is done, what is pending, and what decisions are needed.</p>
+        </div>
+      </div>
+      <div class="how-footnote">
+        <p><strong>Australia-wide:</strong> We work remotely, integrating with your existing tools — email, Sheets/Excel, Procore, Aconex, and more — coordinating closely with your site team.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-section" style="scroll-margin-top:74px;">
+  <div class="container">
+    <div class="services-wrap">
+
+      <div class="services-sidebar">
+        <p class="section-label">Packages &amp; Pricing</p>
+        <h2>Built around your project</h2>
+        <p>Start with the Base CA Subscription, then add modules as your project demands. Month-to-month, per project, no lock-in.</p>
+        <nav class="sidebar-nav" aria-label="Package navigation">
+          <a class="snav-item active" href="#base">Base CA</a>
+          <a class="snav-item" href="#addon-procurement">Trade Procurement</a>
+          <a class="snav-item" href="#addon-financial">Financial Control</a>
+          <a class="snav-item" href="#addon-closeout">Close-out</a>
+          <a class="snav-item" href="#addon-program">Program</a>
+          <a class="snav-item" href="#discounts">Discounts</a>
         </nav>
       </div>
-    </div>
-  </header>
 
-  <main id="top" class="hero">
-    <div class="container">
-      <div class="grid heroGrid">
-        <section class="heroPanel">
-          <div class="badge"><span class="dot"></span> Month-to-month subscription CA</div>
-
-          <h1>Subscription Contract Administration for Builders</h1>
-
-          <!-- ✅ CHANGE ADDED (Commercial authority line) -->
-          <p style="margin:0 0 10px; font-size:14px; font-weight:800; color:var(--text);">
-            Protect your margin. Stay compliant. Keep your claims moving.
-          </p>
-
-          <p style="margin:0 0 10px; font-size:14px; font-weight:800; color:var(--text);">
-            Built by construction professionals, not virtual assistants. With over a decade of experience in the Australian construction industry.
-          </p>
-
-          <!-- Slightly tightened to include SoP more explicitly -->
-          <p>
-            SiteDesk provides disciplined, on-demand contract administration support — variations, claims, procurement admin, subcontract administration, cost control, and Security of Payment compliance — without hiring full-time.
-          </p>
-
-          <p style="margin-top:8px; font-size:13px; font-weight:700; color:var(--text);">
-            Fast onboarding and rapid commencement. We typically integrate and begin adding value within days, not weeks.
-          </p>
-
-          <div class="btnRow">
-            <a class="btn secondary" href="#contact">Request a same-day proposal</a>
-          </div>
-
-          <p style="margin-top:10px; font-size:12px;">
-            Australia-wide service, based out of Sydney • Remote delivery • Scale up/down anytime
-          </p>
-        </section>
-
-        <div class="heroArt">
-          <img src="danist-soh-8Gg2Ne_uTcM-unsplash.jpg" alt="Construction site with tower cranes" style="width:100%; height:auto; border-radius:14px; display:block;" />
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <section id="how" class="anchor">
-    <div class="container">
-      <div class="card">
-        <h2>How it works</h2>
-        <p style="margin-bottom:14px;">SiteDesk integrates quickly and runs a consistent commercial rhythm so variations, claims and correspondence keep moving.</p>
-        <div class="grid cols3">
-          <div class="item">
-            <h3>1. Onboard</h3>
-            <p>We review current project status, contracts, registers and priorities. Then we implement the SiteDesk CA system.</p>
-          </div>
-          <div class="item">
-            <h3>2. Manage the workflow</h3>
-            <p>We manage the weekly workflow: variations, claims, correspondence, action tracking and Security of Payment Act key dates.</p>
-          </div>
-          <div class="item">
-            <h3>3. Keep you informed</h3>
-            <p>You receive clear updates and a short written snapshot of what is done, what is pending, and what decisions are needed.</p>
-          </div>
-        </div>
-        <p class="mini" style="margin-top:12px;"><strong>Australia-wide:</strong> We work remotely, integrating our proprietary system with your existing systems (email, Sheets/Excel, Procore, Aconex, etc.) and coordinate closely with your site team.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="services" class="anchor" style="padding-top:18px;">
-    <!-- Base subscription (full-width band) -->
-    <div style="width:100%; background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.08);">
-      <div class="container" style="padding-top:22px; padding-bottom:22px;">
-        <div class="card" style="padding:28px;">
-          <div class="badge"><span class="dot"></span> Base subscription</div>
-          <h2 style="margin-bottom:6px;">Base CA Subscription</h2>
-          <p style="margin-bottom:14px;">Your foundation CA package, delivered month-to-month, per project. Includes implementation of SiteDesk's software system and Security of Payment Act compliant processes from day one.</p>
-
-          <div class="grid cols2" style="align-items:start;">
-            <div>
-              <p style="margin:0 0 10px; font-weight:950; color:var(--text); font-size:22px;">$2,000 + GST <span style="font-size:13px; font-weight:800; color:var(--muted);">/ month / project</span></p>
-              <p class="mini" style="margin-top:0;"><strong>Best for:</strong> Builders wanting reliable baseline CA support without fixed overheads.</p>
+      <div class="services-main">
+        <div class="base-card" id="base">
+          <div class="base-card-top">
+            <div class="base-badge">Base Subscription</div>
+            <h2>Base CA Subscription</h2>
+            <p>Your foundation CA package, delivered month-to-month per project. Includes SiteDesk's software system and Security of Payment Act compliant processes from day one.</p>
+            <div class="price-row">
+              <div class="price-num">$2,000</div>
+              <div class="price-suffix">+ GST / month / project</div>
             </div>
-            <div>
+            <a class="btn primary" href="#contact" style="margin-top:10px;">Request proposal</a>
+          </div>
+          <div class="base-card-body">
+            <div class="base-card-col">
+              <p><strong style="color:rgba(255,255,255,.8);">Best for:</strong> Builders wanting reliable baseline CA support without fixed overheads.</p>
               <ul>
                 <li>Variations and EOT administration</li>
                 <li>Progress claims administration</li>
-                <li>Client, consultant, and authority correspondence (including formal written correspondence issued on the builder’s behalf)</li>
-                <li><strong>Document control</strong> (drawing/specification registers, revisions, transmittals, distribution and filing discipline)</li>
+                <li>Client, consultant &amp; authority correspondence</li>
+                <li>Formal written correspondence issued on builder's behalf</li>
+              </ul>
+            </div>
+            <div class="base-card-col">
+              <p><strong style="color:rgba(255,255,255,.8);">Included:</strong></p>
+              <ul>
+                <li><strong>Document control</strong> — registers, revisions, transmittals</li>
                 <li>Core CA registers maintained and updated</li>
                 <li>Weekly check-in and action tracking</li>
-                <li><strong>Security of Payment Act compliance</strong> (claims, schedules, notices, key dates)</li>
-                <li><strong>SiteDesk systems implementation</strong> (registers, templates, workflows)</li>
+                <li><strong>Security of Payment Act compliance</strong></li>
+                <li><strong>SiteDesk systems implementation</strong></li>
               </ul>
             </div>
           </div>
+          <div class="base-card-footer">
+            <p>Billed monthly in advance. Prices exclude GST. Month-to-month with no long-term lock-in.</p>
+          </div>
+        </div>
 
-          <p style="margin-top:14px; font-size:12px; color:var(--muted);">Billed monthly in advance. Prices exclude GST. Month-to-month with no long-term lock-in.</p>
+        <div>
+          <div class="addons-header">
+            <p class="section-label" style="margin:0;">Add-on Packages</p>
+            <p style="font-size:13px; color:var(--muted);">Add or remove as your project demands change.</p>
+          </div>
+          <div class="addon-grid">
+            <div class="addon-card" id="addon-procurement">
+              <h3>Trade Procurement &amp; Subcontract Management <span class="pop-tag">Most selected</span></h3>
+              <div class="addon-price">$1,500 <span>+ GST / month / project</span></div>
+              <ul>
+                <li>Trade scope write-ups and RFQ administration</li>
+                <li>Trade comparisons and recommendation summaries</li>
+                <li>Award support and lead-time tracking</li>
+                <li>Subcontract preparation and issuance</li>
+                <li>Compliance chasing — insurances, licences, SWMS</li>
+                <li>Subcontract status tracking and follow-up</li>
+              </ul>
+              <p class="best-for"><strong>Ideal when:</strong> Actively procuring and letting multiple trade packages.</p>
+            </div>
+            <div class="addon-card" id="addon-financial">
+              <h3>Financial Control Package</h3>
+              <div class="addon-price">$1,000 <span>+ GST / month / project</span></div>
+              <ul>
+                <li>Commitments tracking and cost-to-complete visibility</li>
+                <li>Forecast checks and margin monitoring</li>
+                <li>Cashflow and claims rhythm support</li>
+                <li>Risk items and cost pressures flagged early</li>
+              </ul>
+              <p class="best-for"><strong>Ideal when:</strong> Margins are tight or you want clearer commercial visibility.</p>
+            </div>
+            <div class="addon-card" id="addon-closeout">
+              <h3>Close-out Package</h3>
+              <div class="addon-price">$500 <span>+ GST / month / project</span></div>
+              <ul>
+                <li>Practical Completion administration</li>
+                <li>Defects tracking and close-out coordination</li>
+                <li>Final account support and documentation chase</li>
+                <li>DLP tracking and follow-through</li>
+              </ul>
+              <p class="best-for"><strong>Ideal when:</strong> Project is approaching PC and you need disciplined close-out.</p>
+            </div>
+            <div class="addon-card" id="addon-program">
+              <h3>Program Creation &amp; Monitoring</h3>
+              <div class="addon-price">$500 <span>+ GST / month / project</span></div>
+              <ul>
+                <li>Baseline program creation or review</li>
+                <li>Ongoing updates and progress tracking</li>
+                <li>Critical path risks and delay identification</li>
+                <li>Written program and progress reports</li>
+                <li>Support for EOT narratives aligned to program impacts</li>
+              </ul>
+              <p class="best-for"><strong>Ideal when:</strong> Client requires regular program reporting or project has tight time pressures.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="discount-wrap" id="discounts">
+          <h3>Bundle &amp; multi-project discounts</h3>
+          <p>Where multiple add-ons or multiple projects are engaged, SiteDesk applies discounted pricing to reflect efficiencies and continuity of delivery.</p>
+          <div class="discount-cols">
+            <div class="d-box">
+              <h3>Multiple add-ons (same project)</h3>
+              <ul>
+                <li><strong>2 add-ons:</strong> 15% discount on add-on fees</li>
+                <li><strong>3+ add-ons:</strong> 20% discount on add-on fees</li>
+              </ul>
+              <p>Discounts apply to add-on fees only. Base subscription excluded.</p>
+            </div>
+            <div class="d-box">
+              <h3>Multiple projects</h3>
+              <ul>
+                <li><strong>2 active projects:</strong> 5% off total monthly fees</li>
+                <li><strong>3+ active projects:</strong> 10% off total monthly fees</li>
+              </ul>
+              <p>Applied while projects are concurrently active on combined fees.</p>
+            </div>
+          </div>
+          <p style="margin-top:14px; font-size:12px; color:var(--muted);">Add-on pricing can be adjusted for unusually high or low project intensity. Discounts are not cumulative unless agreed in writing.</p>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Add-on modules -->
-    <div class="container" style="padding-top:26px;">
-      <div class="card">
-        <h2>Add-on packages</h2>
-        <p style="margin-bottom:14px;">Select only the modules your project needs. Add-ons are applied per project, per month, and can be added or removed as your workload changes.</p>
-
-        <div class="grid cols2">
-          <div class="item">
-            <h3>Trade Procurement &amp; Subcontract Management <span class="badge" style="margin-left:8px;"><span class="dot"></span> Most commonly selected add-on</span></h3>
-            <p style="margin:6px 0 0; font-weight:900; color:var(--text);">$1,500 + GST <span style="font-size:12px; color:var(--muted);">/ month / project</span></p>
-            <ul>
-              <li>Trade scope write-ups and RFQ administration</li>
-              <li>Trade comparisons and recommendation summaries</li>
-              <li>Award support and lead-time tracking</li>
-              <li>Subcontract preparation and issuance</li>
-              <li>Scope alignment with RFIs and trade clarifications</li>
-              <li>Compliance chasing (insurances, licences, SWMS, etc.)</li>
-              <li>Subcontract status tracking and follow-up</li>
-            </ul>
-            <p class="mini"><strong>Ideal when:</strong> You are actively procuring and letting multiple trade packages and want one coordinated commercial workflow from RFQ through to executed subcontract.</p>
-          </div>
-
-          <div class="item">
-            <h3>Financial Control Package</h3>
-            <p style="margin:6px 0 0; font-weight:900; color:var(--text);">$1,000 + GST <span style="font-size:12px; color:var(--muted);">/ month / project</span></p>
-            <ul>
-              <li>Commitments tracking and cost-to-complete visibility</li>
-              <li>Forecast checks and margin monitoring</li>
-              <li>Cashflow and claims rhythm support</li>
-              <li>Risk items and cost pressures flagged early</li>
-            </ul>
-            <p class="mini"><strong>Ideal when:</strong> Margins are tight or you want clearer commercial visibility across the job.</p>
-          </div>
-
-          <div class="item">
-            <h3>Close-out Package</h3>
-            <p style="margin:6px 0 0; font-weight:900; color:var(--text);">$500 + GST <span style="font-size:12px; color:var(--muted);">/ month / project</span></p>
-            <ul>
-              <li>Practical Completion administration</li>
-              <li>Defects tracking and close-out coordination</li>
-              <li>Final account support and documentation chase</li>
-              <li>DLP tracking and follow-through</li>
-            </ul>
-            <p class="mini"><strong>Ideal when:</strong> The project is approaching PC and you need disciplined close-out to protect final payments.</p>
-          </div>
-
-          <div class="item">
-            <h3>Program Creation &amp; Monitoring</h3>
-            <p style="margin:6px 0 0; font-weight:900; color:var(--text);">$500 + GST <span style="font-size:12px; color:var(--muted);">/ month / project</span></p>
-            <ul>
-              <li>Baseline construction program creation or review</li>
-              <li>Ongoing program updates and progress tracking</li>
-              <li>Identification of critical path risks and delays</li>
-              <li>Written program and progress reports issued to client</li>
-              <li>Support for EOT narratives aligned to program impacts</li>
-            </ul>
-            <p class="mini"><strong>Ideal when:</strong> The client requires regular program reporting or the project has tight time pressures and sequencing risk.</p>
-          </div>
-        </div>
+<!-- FAQs -->
+<section id="faqs" class="faqs-section" style="scroll-margin-top:74px;">
+  <div class="container">
+    <div class="faqs-head">
+      <p class="section-label">Frequently asked</p>
+      <h2>Common questions</h2>
+      <p>Everything you need to know before getting started.</p>
+    </div>
+    <div class="faqs-cols">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <details open>
+          <summary>What's included in "Contract Administration"?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Variations, claims, subcontract admin, procurement admin, registers, commercial correspondence, and close-out support — set up to keep projects compliant and financially controlled.</p></div>
+        </details>
+        <details>
+          <summary>Can you jump in mid-project?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Yes. We can stabilise existing registers, clean up documentation, and establish a weekly rhythm quickly.</p></div>
+        </details>
+        <details>
+          <summary>Is it locked in?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>No. Subscriptions are month-to-month. Scale support up or down as workload changes.</p></div>
+        </details>
+        <details>
+          <summary>Is pricing per project or across all?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Pricing is per month, per active project. If you have multiple projects running concurrently, each is priced individually based on the selected tier.</p></div>
+        </details>
+        <details>
+          <summary>How quickly can you start?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>We typically onboard and commence within days. Once access to current registers, contracts, and key documents is provided, we begin adding value immediately.</p></div>
+        </details>
+        <details>
+          <summary>Do you replace an in-house CA?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>We can supplement an existing CA, cover workload gaps, or act as a fully outsourced CA function depending on the tier selected and project requirements.</p></div>
+        </details>
       </div>
-
-      <p style="margin-top:14px; font-size:12px; color:var(--muted);">Note: Add-on pricing can be adjusted for unusually high or low project intensity (e.g. accelerated programs, complex stakeholder environments, or minimal trade load).</p>
-
-      <div class="item" style="margin-top:16px;">
-        <h3>Bundle and multi-project discounts</h3>
-        <p style="margin-bottom:10px;">Where multiple add-ons or multiple projects are engaged, SiteDesk applies discounted pricing to reflect efficiencies and continuity of delivery.</p>
-        <div class="grid cols2">
-          <div class="item" style="background:rgba(255,255,255,.02);">
-            <h3 style="margin-bottom:6px;">Multiple add-ons (same project)</h3>
-            <ul>
-              <li><strong>2 add-ons:</strong> 15% discount on add-on fees</li>
-              <li><strong>3+ add-ons:</strong> 20% discount on add-on fees</li>
-            </ul>
-            <p class="mini" style="margin-top:8px;">Discounts apply to add-on fees only (base subscription excluded).</p>
-          </div>
-          <div class="item" style="background:rgba(255,255,255,.02);">
-            <h3 style="margin-bottom:6px;">Multiple projects</h3>
-            <ul>
-              <li><strong>2 active projects:</strong> 5% discount on <strong>total monthly subscription fees</strong> (base + add-ons)</li>
-              <li><strong>3+ active projects:</strong> 10% discount on <strong>total monthly subscription fees</strong> (base + add-ons)</li>
-            </ul>
-            <p class="mini" style="margin-top:8px;">Discounts apply while projects are concurrently active under subscription and are calculated on the combined base and add-on fees.</p>
-          </div>
-        </div>
-        <p class="mini" style="margin-top:10px;">Discount eligibility is assessed at onboarding and reviewed if project intensity changes. Discounts are not cumulative unless agreed in writing.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <details>
+          <summary>How do you manage multiple stakeholders?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>We coordinate closely with your site team, consultants, and subcontractors, maintaining clear registers and written communication to ensure accountability and timely decision-making.</p></div>
+        </details>
+        <details>
+          <summary>What types of projects do you support?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Residential, mixed-use, and commercial construction projects across Australia, with services tailored to suit project scale and complexity.</p></div>
+        </details>
+        <details>
+          <summary>Who will be doing the work?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>All contract administration work is led and overseen by the Director of SiteDesk, who has over a decade of experience as a Contract Administrator, Senior CA, and Project Manager across multiple construction sectors — including hands-on experience with head contracts, subcontracts, variations, claims, and Australian payment legislation.</p></div>
+        </details>
+        <details>
+          <summary>What is "SiteDesk systems implementation"?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>At the start of each engagement, SiteDesk implements our proven CA software onto your project — structured registers, standardised templates, defined workflows, and key date tracking for Security of Payment Act compliance. No changes to how your site team builds.</p></div>
+        </details>
+        <details>
+          <summary>Can you assist if a legal dispute arises?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Yes. SiteDesk can maintain and collate the critical project records required — registers, correspondence, notices, claims, programs — and we regularly work alongside construction solicitors. While we don't provide legal advice, our role is to ensure records are accurate, complete, and available when required.</p></div>
+        </details>
+        <details>
+          <summary>Will I always deal with the same person?<span class="sum-icon">+</span></summary>
+          <div class="details-body"><p>Yes. You deal directly with the Director throughout the engagement — no handovers, no re-explaining, consistent accountability.</p></div>
+        </details>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="faqs" class="anchor">
-    <div class="container">
-      <div class="card">
-        <h2>FAQs</h2>
-        <div class="grid" style="margin-top:12px;">
-          <details open>
-            <summary>What’s included in “Contract Administration”?</summary>
-            <p style="margin-top:10px;">Variations, claims, subcontract admin, procurement admin, registers, commercial correspondence, and close-out support, set up to keep projects compliant and financially controlled.</p>
-          </details>
-          <details>
-            <summary>Can you jump in mid-project?</summary>
-            <p style="margin-top:10px;">Yes. We can stabilise existing registers, clean up documentation, and establish a weekly rhythm quickly.</p>
-          </details>
-          <details>
-            <summary>Is it locked in?</summary>
-            <p style="margin-top:10px;">No, subscriptions are month-to-month. Scale support up or down as workload changes.</p>
-          </details>
-          <details>
-            <summary>Is pricing per project or across all projects?</summary>
-            <p style="margin-top:10px;">Pricing is per month, per active project. If you have multiple projects running concurrently, each project is priced individually based on the selected tier.</p>
-          </details>
-          <details>
-            <summary>How quickly can you start?</summary>
-            <p style="margin-top:10px;">We typically onboard and commence within days. Once access to current registers, contracts, and key documents is provided, we can begin adding value immediately.</p>
-          </details>
-          <details>
-            <summary>Do you replace an in-house CA?</summary>
-            <p style="margin-top:10px;">We can supplement an existing CA, cover workload gaps, or act as a fully outsourced CA function depending on the tier selected and project requirements.</p>
-          </details>
-          <details>
-            <summary>How do you manage multiple stakeholders?</summary>
-            <p style="margin-top:10px;">We coordinate closely with your site team, consultants, and subcontractors, maintaining clear registers and written communication to ensure accountability and timely decision-making.</p>
-          </details>
-          <details>
-            <summary>What types of projects do you support?</summary>
-            <p style="margin-top:10px;">We support residential, mixed-use, and commercial construction projects across Australia, with services tailored to suit project scale and complexity.</p>
-          </details>
-          <details>
-            <summary>Who will be carrying out the contract administration work?</summary>
-            <p style="margin-top:10px;">All contract administration work is led and overseen by the Director of SiteDesk, who has over a decade of experience working as a Contract Administrator, Senior Contract Administrator, and Project Manager across multiple construction sectors. This includes hands-on experience administering head contracts and subcontracts, managing variations and claims, and operating within the requirements of relevant Australian Standards, building codes, commercial contractual obligations, and relevant payment legislation across Australia.</p>
-          </details>
-          <details>
-            <summary>What do you mean by “SiteDesk systems implementation”?</summary>
-            <p style="margin-top:10px;">At the start of each engagement, SiteDesk implements our proven Contract Administration Software directly onto your project. This includes setting up structured variation, claims, and procurement registers; standardised templates for correspondence and notices; clear workflows with defined turnaround times; and key date tracking for <strong>Security of Payment Act compliance</strong>. The aim is to bring immediate order, consistency, and compliance to your commercial processes, without changing how your site team builds.</p>
-          </details>
-          <details>
-            <summary>Can SiteDesk assist if a legal dispute or claim arises?</summary>
-            <p style="margin-top:10px;">Yes. Where a dispute, formal claim, or legal issue arises, SiteDesk can support compliance and coordination by maintaining and collating the critical project records required. This includes registers, contemporaneous correspondence, notices, claims, programs, and document control records. We regularly work alongside construction solicitors by providing clear, structured information to support legal advice, dispute resolution, or formal proceedings. While SiteDesk does not provide legal advice, our role is to ensure the underlying contract administration records are accurate, complete, and readily available when required.</p>
-          </details>
-          <details>
-            <summary>Will I always deal with the same person?</summary>
-            <p style="margin-top:10px;">Yes. You will deal directly with the Director throughout the engagement, ensuring consistency, accountability, and a clear understanding of your projects without handovers or re-explaining issues.</p>
-          </details>
+<!-- CONTACT -->
+<section id="contact" class="contact-section" style="scroll-margin-top:74px;">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-left">
+        <p class="section-label">Get started</p>
+        <h2>Request a proposal</h2>
+        <p>Tell us what you're building and what's currently on your plate. We'll recommend the right subscription level and respond same day.</p>
+        <div class="trust-items">
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <div><h3>Same-day response</h3><p>We respond to all proposal requests the same business day.</p></div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div><h3>No lock-in contracts</h3><p>Month-to-month. Scale up or down anytime as your project needs change.</p></div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div><h3>Direct access</h3><p>You deal directly with the Director — no handovers, no account managers.</p></div>
+          </div>
+          <div class="trust-item">
+            <div class="trust-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div><h3>Australia-wide</h3><p>Based in Sydney. Remote delivery across all states and territories.</p></div>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section id="contact" class="anchor">
-    <div class="container">
-      <div class="card">
-        <h2>Book a call or request a proposal</h2>
-        <p style="margin-bottom:14px;">Tell us what you’re building and what’s currently on your plate. We’ll recommend the right subscription level and respond same day.</p>
-
+      <div class="contact-form">
+        <h3>Send us a message</h3>
         <form name="sitedesk-contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?submitted=true#contact">
           <input type="hidden" name="form-name" value="sitedesk-contact" />
-          <p style="display:none">
-            <label>Don’t fill this out: <input name="bot-field" /></label>
-          </p>
-
-          <div id="formSuccess" class="item" style="display:none; margin-bottom:14px; background:rgba(96,165,250,.12); border-color:rgba(37,99,235,.25);">
-            <strong style="color:var(--text);">Thanks - we’ve received your request.</strong>
-            <div style="color:var(--muted); margin-top:6px;">We’ll get back to you shortly.</div>
+          <p style="display:none"><label>Don't fill this out: <input name="bot-field" /></label></p>
+          <div id="formSuccess">
+            <strong>Request received.</strong>
+            <p>We'll get back to you shortly.</p>
           </div>
-
-          <div class="grid cols2">
-            <div>
-              <label style="font-size:12px; color:var(--muted);" for="name">Name</label>
-              <input id="name" name="name" placeholder="Your name" required />
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--muted);" for="company">Company</label>
-              <input id="company" name="company" placeholder="Builder / Developer" />
-            </div>
+          <div class="form-row">
+            <div class="field" style="margin-bottom:0"><label for="name">Name</label><input id="name" name="name" placeholder="Your name" required /></div>
+            <div class="field" style="margin-bottom:0"><label for="company">Company</label><input id="company" name="company" placeholder="Builder / Developer" /></div>
           </div>
-          <div class="grid cols2">
-            <div>
-              <label style="font-size:12px; color:var(--muted);" for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="name@company.com" required />
-            </div>
-            <div>
-              <label style="font-size:12px; color:var(--muted);" for="phone">Phone</label>
-              <input id="phone" name="phone" placeholder="04xx xxx xxx" />
-            </div>
+          <div class="form-row">
+            <div class="field" style="margin-bottom:0"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="name@company.com" required /></div>
+            <div class="field" style="margin-bottom:0"><label for="phone">Phone</label><input id="phone" name="phone" placeholder="04xx xxx xxx" /></div>
           </div>
-          <div>
-            <label style="font-size:12px; color:var(--muted);" for="help">What do you need help with?</label>
+          <div class="field">
+            <label for="help">What do you need help with?</label>
             <textarea id="help" name="help" placeholder="Variations, claims, procurement admin, subcontract admin, close-out…"></textarea>
           </div>
-          <div class="btnRow">
-            <button class="btn primary" type="submit">Send request</button>
-          </div>
+          <button class="btn primary" type="submit" style="width:100%; justify-content:center;">Send request</button>
         </form>
-
-        <script>
-          // Show success message after Netlify redirect
-          (function(){
-            try{
-              const params = new URLSearchParams(window.location.search);
-              if(params.get('submitted') === 'true'){
-                const el = document.getElementById('formSuccess');
-                if(el) el.style.display = 'block';
-              }
-            }catch(e){}
-          })();
-        </script>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer>
-    <div class="container">
-      <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <img src="/mnt/user-data/uploads/SiteDesk-removebg-preview.png" alt="SiteDesk" style="height:28px; width:auto; display:block; filter:brightness(0) invert(1);" />
+        <div class="footer-sub">Contract Administration Subscriptions &nbsp;·&nbsp; Month-to-month &nbsp;·&nbsp; Australia-wide</div>
+      </div>
+      <div class="footer-right">
         <div>© SiteDesk. All rights reserved.</div>
-        <div>Australia-wide • Contract Administration subscriptions • Month-to-month</div>
-      </div>
-      <div style="margin-top:10px; font-size:13px; color:var(--text);">
-        Contact us on <a href="tel:0451024331" style="font-weight:800;">0451 024 331</a>
+        <div style="margin-top:5px;">Call us: <a href="tel:0451024331">0451 024 331</a></div>
       </div>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-    // Mobile nav toggle
-    (function(){
-      const btn = document.querySelector('.menuBtn');
-      const nav = document.getElementById('navLinks');
-      if(!btn || !nav) return;
-
-      const close = () => {
-        nav.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
-      };
-
-      btn.addEventListener('click', () => {
-        const isOpen = nav.classList.toggle('open');
-        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-
-      // Close menu after tapping a link
-      nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
-
-      // Close on resize back to desktop
-      window.addEventListener('resize', () => {
-        if(window.innerWidth > 640) close();
-      });
-    })();
-  </script>
+<script>
+  (function(){
+    try {
+      if(new URLSearchParams(window.location.search).get('submitted')==='true'){
+        const el=document.getElementById('formSuccess');
+        if(el) el.style.display='block';
+      }
+    }catch(e){}
+    const btn=document.querySelector('.menu-btn');
+    const nav=document.getElementById('navLinks');
+    if(!btn||!nav) return;
+    const close=()=>{nav.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+    btn.addEventListener('click',()=>{
+      const open=nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    });
+    nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+    window.addEventListener('resize',()=>{if(window.innerWidth>720)close();});
+  })();
+</script>
 </body>
 </html>
