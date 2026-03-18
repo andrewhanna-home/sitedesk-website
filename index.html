@@ -43,15 +43,15 @@
   }
 
   /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  #navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     display: flex; align-items: center; justify-content: space-between;
     padding: 28px 56px;
     background: transparent;
     transition: padding 0.4s, background 0.4s, border-color 0.4s;
     border-bottom: 1px solid transparent;
   }
-  nav.scrolled {
+  #navbar.scrolled {
     background: rgba(247,245,242,0.97);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(11,11,11,0.08);
@@ -62,10 +62,9 @@
     font-size: 1.15rem; font-weight: 400;
     color: #FFFFFF; text-decoration: none; letter-spacing: 0.01em;
     transition: color 0.4s, opacity 0.4s;
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0; pointer-events: none;
   }
-  nav.scrolled .nav-logo { color: var(--cream); opacity: 1; pointer-events: auto; }
+  #navbar.scrolled .nav-logo { color: var(--cream); opacity: 1; pointer-events: auto; }
   .nav-logo strong { font-weight: 800; }
   .nav-links { display: flex; gap: 36px; align-items: center; list-style: none; }
   .nav-links a {
@@ -74,8 +73,8 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: #FFFFFF; }
-  nav.scrolled .nav-links a { color: var(--muted); }
-  nav.scrolled .nav-links a:hover { color: var(--cream); }
+  #navbar.scrolled .nav-links a { color: var(--muted); }
+  #navbar.scrolled .nav-links a:hover { color: var(--cream); }
   .nav-cta {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.4);
@@ -85,11 +84,11 @@
     transition: background 0.2s, border-color 0.2s !important;
   }
   .nav-cta:hover { background: rgba(255,255,255,0.28) !important; border-color: #FFFFFF !important; }
-  nav.scrolled .nav-cta {
+  #navbar.scrolled .nav-cta {
     background: var(--cream) !important; border-color: var(--cream) !important;
     color: #FFFFFF !important; backdrop-filter: none;
   }
-  nav.scrolled .nav-cta:hover { background: #2A2A2A !important; }
+  #navbar.scrolled .nav-cta:hover { background: #2A2A2A !important; }
 
   /* ── HERO ── */
   #top {
@@ -437,6 +436,67 @@
     color: var(--body-text); font-size: 0.9rem; line-height: 1.7;
   }
 
+  /* ── MOBILE NAV ── */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column; justify-content: center; gap: 5px;
+    width: 36px; height: 36px; cursor: pointer;
+    background: none; border: none; padding: 4px;
+  }
+  .nav-hamburger span {
+    display: block; width: 22px; height: 2px;
+    background: #FFFFFF;
+    transition: transform 0.3s, opacity 0.3s, background 0.4s;
+    transform-origin: center;
+  }
+  nav.scrolled .nav-hamburger span { background: var(--cream); }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed; inset: 0; z-index: 300;
+    background: #0B0B0B;
+    display: flex;
+    flex-direction: column; justify-content: center; align-items: flex-start;
+    padding: 80px 36px 48px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .mobile-menu a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; font-weight: 700;
+    color: #FFFFFF; text-decoration: none;
+    letter-spacing: -0.02em; line-height: 1.2;
+    display: block; padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    width: 100%;
+    transition: opacity 0.2s;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu a:hover { opacity: 0.6; }
+  .mobile-menu .mobile-cta {
+    margin-top: 36px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: #FFFFFF; color: #0B0B0B !important;
+    padding: 16px 32px; display: inline-block; width: auto;
+    border-bottom: none !important;
+  }
+  .mobile-menu-footer {
+    position: absolute; bottom: 40px; left: 36px;
+    font-size: 0.72rem; color: rgba(255,255,255,0.3);
+    font-weight: 500; letter-spacing: 0.06em;
+  }
+
   /* ── FOOTER ── */
   footer {
     background: var(--dark); border-top: 1px solid rgba(11,11,11,0.09);
@@ -463,9 +523,10 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
-    nav { padding: 20px 24px; }
-    nav.scrolled { padding: 14px 24px; }
+    #navbar { padding: 20px 24px; }
+    #navbar.scrolled { padding: 14px 24px; }
     .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
     .hero-logo { top: 24px; left: 24px; font-size: 1.2rem; }
     .section { padding: 80px 24px; }
     #top { padding-top: 0; }
@@ -505,6 +566,16 @@
 </head>
 <body>
 
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about">About</a>
+  <a href="#how">Process</a>
+  <a href="#services">Packages</a>
+  <a href="#faqs">FAQs</a>
+  <a href="#contact" class="mobile-cta">Request Proposal</a>
+  <div class="mobile-menu-footer">0451 024 331</div>
+</div>
+
 <!-- NAV -->
 <nav id="navbar">
   <a href="#top" class="nav-logo">Site<strong>Desk</strong></a>
@@ -516,6 +587,9 @@
     <li><a href="tel:0451024331">0451 024 331</a></li>
     <li><a href="#contact" class="nav-cta">Request Proposal</a></li>
   </ul>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -791,16 +865,18 @@
   </div>
 
   <div class="reveal d1">
-    <form class="contact-form" onsubmit="handleSubmit(event)">
+    <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="form-name" value="contact">
+      <p style="display:none;"><input name="bot-field"></p>
       <div class="form-row">
-        <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required></div>
-        <div class="form-group"><label>Company</label><input type="text" placeholder="Company name"></div>
+        <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your name" required></div>
+        <div class="form-group"><label>Company</label><input type="text" name="company" placeholder="Company name"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com" required></div>
-        <div class="form-group"><label>Phone</label><input type="tel" placeholder="0400 000 000"></div>
+        <div class="form-group"><label>Email</label><input type="email" name="email" placeholder="your@email.com" required></div>
+        <div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="0400 000 000"></div>
       </div>
-      <div class="form-group"><label>What do you need help with?</label><textarea placeholder="Tell us about your project: type, stage, and current challenges..."></textarea></div>
+      <div class="form-group"><label>What do you need help with?</label><textarea name="message" placeholder="Tell us about your project: type, stage, and current challenges..."></textarea></div>
       <div class="form-footer">
         <span class="form-note">We'll respond the same business day</span>
         <button type="submit" class="btn-submit">Send Request →</button>
@@ -813,23 +889,18 @@
 <!-- FOOTER -->
 <footer>
   <a href="#top" class="footer-logo">Site<strong>Desk</strong></a>
-  <nav class="footer-links">
+  <div class="footer-links">
     <a href="#about">About</a>
     <a href="#how">Process</a>
     <a href="#services">Packages</a>
     <a href="#faqs">FAQs</a>
     <a href="#contact">Contact</a>
     <a href="tel:0451024331">0451 024 331</a>
-  </nav>
+  </div>
   <div class="footer-copy">© 2026 SiteDesk. All rights reserved.<br>Sydney, NSW · Remote delivery Australia-wide</div>
 </footer>
 
 <script>
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
     const isOpen = item.classList.contains('open');
@@ -839,17 +910,58 @@
 
   function handleSubmit(e) {
     e.preventDefault();
-    e.target.style.display = 'none';
-    document.getElementById('successMsg').style.display = 'block';
+    const form = e.target;
+    const data = new FormData(form);
+    fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    })
+    .then(() => {
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    })
+    .catch(() => {
+      form.style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    });
   }
 
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 80) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // Scroll reveal
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Nav scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    // Mobile menu
+    const menu = document.getElementById('mobileMenu');
+    const burger = document.getElementById('hamburger');
+
+    function openMenu() {
+      menu.classList.add('open');
+      burger.classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
+    function closeMenu() {
+      menu.classList.remove('open');
+      burger.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    burger.addEventListener('click', function() {
+      menu.classList.contains('open') ? closeMenu() : openMenu();
+    });
+
+    menu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
   });
 </script>
 </body>
