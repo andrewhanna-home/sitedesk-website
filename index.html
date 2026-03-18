@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiteDesk — Contract Admin That Pays for Itself</title>
+<title>SiteDesk | Contract Admin That Pays for Itself</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -46,57 +46,83 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 56px;
-    background: rgba(247,245,242,0.95);
+    padding: 28px 56px;
+    background: transparent;
+    transition: padding 0.4s, background 0.4s, border-color 0.4s;
+    border-bottom: 1px solid transparent;
+  }
+  nav.scrolled {
+    background: rgba(247,245,242,0.97);
     backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(11,11,11,0.08);
-    transition: padding 0.3s;
+    padding: 18px 56px;
   }
   .nav-logo {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.15rem; font-weight: 400;
-    color: var(--cream); text-decoration: none; letter-spacing: 0.01em;
+    color: #FFFFFF; text-decoration: none; letter-spacing: 0.01em;
+    transition: color 0.4s, opacity 0.4s;
+    opacity: 0;
+    pointer-events: none;
   }
+  nav.scrolled .nav-logo { color: var(--cream); opacity: 1; pointer-events: auto; }
   .nav-logo strong { font-weight: 800; }
   .nav-links { display: flex; gap: 36px; align-items: center; list-style: none; }
   .nav-links a {
     font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--muted); text-decoration: none;
+    text-transform: uppercase; color: rgba(255,255,255,0.7); text-decoration: none;
     transition: color 0.2s;
   }
-  .nav-links a:hover { color: var(--cream); }
+  .nav-links a:hover { color: #FFFFFF; }
+  nav.scrolled .nav-links a { color: var(--muted); }
+  nav.scrolled .nav-links a:hover { color: var(--cream); }
   .nav-cta {
-    background: var(--cream); color: #FFFFFF !important;
-    padding: 11px 24px; font-weight: 700 !important;
-    transition: background 0.2s !important;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #FFFFFF !important;
+    padding: 10px 22px; font-weight: 700 !important;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, border-color 0.2s !important;
   }
-  .nav-cta:hover { background: #2A2A2A !important; }
+  .nav-cta:hover { background: rgba(255,255,255,0.28) !important; border-color: #FFFFFF !important; }
+  nav.scrolled .nav-cta {
+    background: var(--cream) !important; border-color: var(--cream) !important;
+    color: #FFFFFF !important; backdrop-filter: none;
+  }
+  nav.scrolled .nav-cta:hover { background: #2A2A2A !important; }
 
   /* ── HERO ── */
   #top {
     min-height: 100vh;
     background: url('hero_jpg.jpg') center center / cover no-repeat;
-    display: flex; flex-direction: column; justify-content: center;
-    padding-top: 80px; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding-top: 0; position: relative; overflow: hidden;
   }
+  /* Multi-layer gradient: strong bottom-left darkness for text, photo visible top-right */
   #top::before {
-    content: ''; position: absolute; inset: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(11,11,11,0.82) 0%,
-      rgba(11,11,11,0.6) 55%,
-      rgba(11,11,11,0.3) 100%
-    );
-    pointer-events: none; z-index: 0;
+    content: ''; position: absolute; inset: 0; z-index: 0;
+    background:
+      linear-gradient(to right, rgba(11,11,11,0.88) 0%, rgba(11,11,11,0.5) 55%, rgba(11,11,11,0.15) 100%),
+      linear-gradient(to top, rgba(11,11,11,0.7) 0%, rgba(11,11,11,0.2) 50%, transparent 100%);
+    pointer-events: none;
   }
+  /* Hero logo — large wordmark displayed inside hero */
+  .hero-logo {
+    position: absolute; top: 36px; left: 56px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.4rem; font-weight: 400;
+    color: #FFFFFF; text-decoration: none; letter-spacing: 0.01em;
+    z-index: 2; opacity: 0.95;
+  }
+  .hero-logo strong { font-weight: 800; }
   .hero-inner {
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 80px 56px; max-width: 860px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 56px 80px; max-width: 900px;
     position: relative; z-index: 1;
   }
   .hero-left { padding-bottom: 0; }
   .hero-eyebrow {
-    display: flex; align-items: center; gap: 14px; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
   }
   .hero-eyebrow::before {
     content: ''; width: 28px; height: 1px; background: rgba(255,255,255,0.45);
@@ -106,12 +132,12 @@
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(3.4rem, 6.5vw, 6.8rem);
     font-weight: 400; line-height: 1.01;
-    letter-spacing: -0.03em; color: #FFFFFF; margin-bottom: 32px;
+    letter-spacing: -0.03em; color: #FFFFFF; margin-bottom: 28px;
   }
   .hero-h1 strong { font-weight: 700; display: block; }
   .hero-sub {
     font-size: 1rem; line-height: 1.85; color: rgba(255,255,255,0.72);
-    max-width: 480px; margin-bottom: 48px; font-weight: 400;
+    max-width: 520px; margin-bottom: 44px; font-weight: 400;
   }
   .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
   .hero-actions .btn-ghost {
@@ -437,11 +463,13 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 1024px) {
-    nav { padding: 18px 24px; }
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
     .nav-links { display: none; }
+    .hero-logo { top: 24px; left: 24px; font-size: 1.2rem; }
     .section { padding: 80px 24px; }
-    #top { padding-top: 66px; }
-    .hero-inner { padding: 56px 24px; max-width: 100%; }
+    #top { padding-top: 0; }
+    .hero-inner { padding: 0 24px 64px; max-width: 100%; }
     .hero-h1 { font-size: clamp(2.8rem, 8vw, 5rem); }
     #about { grid-template-columns: 1fr; gap: 0; }
     .about-left { position: static; padding-bottom: 0; }
@@ -492,11 +520,12 @@
 
 <!-- HERO -->
 <section id="top">
+  <a href="#top" class="hero-logo">Site<strong>Desk</strong></a>
   <div class="hero-inner">
     <div class="hero-left">
       <div class="hero-eyebrow reveal"><span class="label">Subscription Contract Administration</span></div>
       <h1 class="hero-h1 reveal d1">Contract Admin<strong>That Pays<br>for Itself.</strong></h1>
-      <p class="hero-sub reveal d2">Expert CA support — variations, claims, procurement, subcontract admin, and Security of Payment compliance — delivered on subscription. No overheads. No lock-in.</p>
+      <p class="hero-sub reveal d2">Expert CA support covering variations, claims, procurement, subcontract admin, and Security of Payment compliance, delivered on subscription. No overheads. No lock-in.</p>
       <div class="hero-actions reveal d3">
         <a href="#contact" class="btn-primary">Request a Proposal →</a>
         <a href="#services" class="btn-ghost">View Packages</a>
@@ -510,7 +539,7 @@
   <div class="about-left">
     <div class="section-eyebrow reveal"><span class="label">About SiteDesk</span></div>
     <h2 class="h1 reveal d1">Commercial Expertise.<br><em>Simplified.</em></h2>
-    <p class="about-body reveal d2">SiteDesk is an Australian contract administration service built specifically for builders and developers. We embed senior-level CA expertise directly into your project — without the cost and commitment of a full-time hire.</p>
+    <p class="about-body reveal d2">SiteDesk is an Australian contract administration service built specifically for builders and developers. We embed senior-level CA expertise directly into your project, without the cost and commitment of a full-time hire.</p>
     <blockquote class="about-pull reveal d3">"You built it. You earned it. Now let's make sure you get paid for it."</blockquote>
     <a href="#contact" class="btn-primary reveal d4">Talk to us today →</a>
   </div>
@@ -527,28 +556,28 @@
       <div class="feature-num">01</div>
       <div>
         <div class="feature-title">Direct Access to the Director</div>
-        <div class="feature-text">Over a decade of hands-on experience as a Contract Administrator, Senior CA, and Project Manager across residential, mixed-use, and commercial construction. You deal directly with them throughout — no account managers, no handovers, no re-explaining.</div>
+        <div class="feature-text">Over a decade of hands-on experience as a Contract Administrator, Senior CA, and Project Manager across residential, mixed-use, and commercial construction. You deal directly with them throughout. No account managers, no handovers, no re-explaining.</div>
       </div>
     </div>
     <div class="about-feature reveal d1">
       <div class="feature-num">02</div>
       <div>
         <div class="feature-title">Fully Remote, Fully Integrated</div>
-        <div class="feature-text">We work remotely and integrate with your existing tools — email, Excel, Procore, Aconex — coordinating closely with your site team, consultants, and subcontractors across Australia.</div>
+        <div class="feature-text">We work remotely and integrate with your existing tools including email, Excel, Procore and Aconex, coordinating closely with your site team, consultants, and subcontractors across Australia.</div>
       </div>
     </div>
     <div class="about-feature reveal d2">
       <div class="feature-num">03</div>
       <div>
         <div class="feature-title">Your Margin, Protected</div>
-        <div class="feature-text">Construction is tough. Margins are tight. If commercial administration isn't tight too — someone else profits from your work. We manage variations, drive claims, maintain subcontract compliance, and keep projects on the right side of the Security of Payment Act.</div>
+        <div class="feature-text">Construction is tough. Margins are tight. If commercial administration isn't tight too, someone else profits from your work. We manage variations, drive claims, maintain subcontract compliance, and keep projects on the right side of the Security of Payment Act.</div>
       </div>
     </div>
     <div class="about-feature reveal d3">
       <div class="feature-num">04</div>
       <div>
         <div class="feature-title">Onboarded Within Days</div>
-        <div class="feature-text">Once access to current registers, contracts, and key documents is provided, we implement the SiteDesk CA system immediately — structured registers, standardised templates, and defined workflows from day one.</div>
+        <div class="feature-text">Once access to current registers, contracts, and key documents is provided, we implement the SiteDesk CA system immediately: structured registers, standardised templates, and defined workflows from day one.</div>
       </div>
     </div>
   </div>
@@ -561,7 +590,7 @@
       <div class="section-eyebrow reveal"><span class="label">Process</span></div>
       <h2 class="h1 reveal d1">How It <em>Works</em></h2>
     </div>
-    <p class="process-sub reveal d2">SiteDesk integrates quickly and runs a consistent commercial rhythm — so variations, claims and correspondence keep moving without you chasing them.</p>
+    <p class="process-sub reveal d2">SiteDesk integrates quickly and runs a consistent commercial rhythm, so variations, claims and correspondence keep moving without you chasing them.</p>
   </div>
   <img src="SiteDesk_Image_3.png" alt="Residential timber roof framing under construction" class="process-img-banner reveal">
   <div class="process-steps" style="margin-top:2px;">
@@ -569,13 +598,13 @@
       <div class="step-num">01</div>
       <div class="step-label">Step One</div>
       <div class="step-title">Onboard</div>
-      <p class="step-text">We review current project status, contracts, registers and priorities. Then we implement the SiteDesk CA system immediately — structured registers, standardised templates, defined workflows, and key date tracking for Security of Payment Act compliance.</p>
+      <p class="step-text">We review current project status, contracts, registers and priorities. Then we implement the SiteDesk CA system immediately: structured registers, standardised templates, defined workflows, and key date tracking for Security of Payment Act compliance.</p>
     </div>
     <div class="process-step reveal d1">
       <div class="step-num">02</div>
       <div class="step-label">Step Two</div>
       <div class="step-title">Manage the Workflow</div>
-      <p class="step-text">We manage the weekly commercial workflow: variations, claims, correspondence, action tracking and SOP key dates — every week without fail. Consistent, proactive administration that keeps your project commercially protected.</p>
+      <p class="step-text">We manage the weekly commercial workflow: variations, claims, correspondence, action tracking and SOP key dates, every week without fail. Consistent, proactive administration that keeps your project commercially protected.</p>
     </div>
     <div class="process-step reveal d2">
       <div class="step-num">03</div>
@@ -585,9 +614,6 @@
     </div>
   </div>
 </section>
-
-<!-- IMAGE BREAK -->
-<img src="hero_jpg.jpg" alt="Commercial construction site with crane and scaffolding" class="img-break">
 
 <!-- PACKAGES -->
 <section id="services" class="section">
@@ -601,7 +627,7 @@
 
   <div class="base-card reveal">
     <div>
-      <div class="section-eyebrow" style="margin-bottom:16px;"><span class="label">Base Subscription — Foundation Package</span></div>
+      <div class="section-eyebrow" style="margin-bottom:16px;"><span class="label">Base Subscription: Foundation Package</span></div>
       <div class="base-title">Base CA Subscription</div>
       <p class="base-desc">Your foundation CA package, delivered month-to-month per project. Includes SiteDesk's software system and Security of Payment Act compliant processes from day one. Best for builders wanting reliable baseline CA support without fixed overheads.</p>
       <div class="base-includes">
@@ -609,7 +635,7 @@
         <div class="inc-item">Progress claims administration</div>
         <div class="inc-item">Client, consultant &amp; authority correspondence</div>
         <div class="inc-item">Formal written correspondence on builder's behalf</div>
-        <div class="inc-item">Document control — registers, revisions, transmittals</div>
+        <div class="inc-item">Document control: registers, revisions, transmittals</div>
         <div class="inc-item">Core CA registers maintained weekly</div>
         <div class="inc-item">Weekly check-in and action tracking</div>
         <div class="inc-item">Security of Payment Act compliance</div>
@@ -632,7 +658,7 @@
         <li>Trade scope write-ups and RFQ administration</li>
         <li>Trade comparisons and recommendation summaries</li>
         <li>Subcontract preparation and issuance</li>
-        <li>Compliance chasing — insurances, licences, SWMS</li>
+        <li>Compliance chasing: insurances, licences, SWMS</li>
       </ul>
     </div>
     <div class="addon-card reveal d1">
@@ -697,7 +723,7 @@
   <div class="faq-list reveal">
     <div class="faq-item open">
       <button class="faq-q" onclick="toggleFaq(this)">What's included in "Contract Administration"?<span class="faq-icon">+</span></button>
-      <div class="faq-a">Variations, claims, subcontract admin, procurement admin, registers, commercial correspondence, and close-out support — set up to keep projects compliant and financially controlled.</div>
+      <div class="faq-a">Variations, claims, subcontract admin, procurement admin, registers, commercial correspondence, and close-out support, set up to keep projects compliant and financially controlled.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Can you jump in mid-project?<span class="faq-icon">+</span></button>
@@ -725,7 +751,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">What is "SiteDesk systems implementation"?<span class="faq-icon">+</span></button>
-      <div class="faq-a">At the start of each engagement, SiteDesk implements our proven CA software onto your project — structured registers, standardised templates, defined workflows, and key date tracking for Security of Payment Act compliance.</div>
+      <div class="faq-a">At the start of each engagement, SiteDesk implements our proven CA software onto your project: structured registers, standardised templates, defined workflows, and key date tracking for Security of Payment Act compliance.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Can you assist if a legal dispute arises?<span class="faq-icon">+</span></button>
@@ -733,7 +759,7 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">Will I always deal with the same person?<span class="faq-icon">+</span></button>
-      <div class="faq-a">Yes. You deal directly with the Director throughout the engagement — no handovers, no re-explaining, consistent accountability.</div>
+      <div class="faq-a">Yes. You deal directly with the Director throughout the engagement. No handovers, no re-explaining, consistent accountability.</div>
     </div>
   </div>
 </section>
@@ -774,13 +800,13 @@
         <div class="form-group"><label>Email</label><input type="email" placeholder="your@email.com" required></div>
         <div class="form-group"><label>Phone</label><input type="tel" placeholder="0400 000 000"></div>
       </div>
-      <div class="form-group"><label>What do you need help with?</label><textarea placeholder="Tell us about your project — type, stage, and current challenges..."></textarea></div>
+      <div class="form-group"><label>What do you need help with?</label><textarea placeholder="Tell us about your project: type, stage, and current challenges..."></textarea></div>
       <div class="form-footer">
         <span class="form-note">We'll respond the same business day</span>
         <button type="submit" class="btn-submit">Send Request →</button>
       </div>
     </form>
-    <div class="success-msg" id="successMsg">Request received — we'll be in touch shortly.</div>
+    <div class="success-msg" id="successMsg">Request received. We'll be in touch shortly.</div>
   </div>
 </section>
 
@@ -819,7 +845,11 @@
 
   const nav = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
-    nav.style.padding = window.scrollY > 60 ? '14px 56px' : '22px 56px';
+    if (window.scrollY > 80) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
   });
 </script>
 </body>
